@@ -1,0 +1,11 @@
+body { display: flex; margin: 0; background: #f9f9f9; font-family: sans-serif; height: 100vh; }
+.sidebar { width: 240px; background: #1c1c1c; color: white; padding: 20px; }
+.content { flex: 1; padding: 40px; overflow-y: auto; }
+.bucket-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+    gap: 1px; background: #eee; border: 1px solid #eee;
+}
+.card { background: white; padding: 15px; text-align: center; }
+.card img { width: 100%; height: 150px; object-fit: cover; border-radius: 4px; }
+.pagination { margin-top: 20px; display: flex; gap: 10px; align-items: center; }
