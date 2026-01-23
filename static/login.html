@@ -6,8 +6,9 @@
     <title>Login | Doorbell Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#1c1c1c] flex items-center justify-center h-screen">
-    <div class="bg-[#232323] p-8 rounded-lg border border-[#2e2e2e] w-full max-w-md shadow-2xl">
+<body class="bg-[#1c1c1c] flex items-center justify-center min-h-screen px-4">
+    
+    <div class="bg-[#232323] p-6 sm:p-8 rounded-lg border border-[#2e2e2e] w-full max-w-md shadow-2xl">
         <div class="flex justify-center mb-6">
             <div class="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center font-bold text-black text-2xl shadow-[0_0_20px_rgba(16,185,129,0.2)]">D</div>
         </div>
@@ -30,8 +31,10 @@
                     placeholder="••••••••">
             </div>
 
-            <button type="submit" 
-                class="w-full bg-emerald-500 text-black font-bold py-3 rounded hover:bg-emerald-400 transition transform active:scale-[0.98] shadow-lg shadow-emerald-500/10">
+            <p id="statusMsg" class="text-center text-sm min-h-[1.25rem]"></p>
+
+            <button type="submit" id="submitBtn"
+                class="w-full bg-emerald-500 text-black font-bold py-4 rounded mt-2 hover:bg-emerald-400 transition transform active:scale-[0.98] shadow-lg shadow-emerald-500/10">
                 Sign In
             </button>
         </form>
@@ -40,22 +43,37 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/static/config.js"></script>
     <script>
-        // LOGIN
-    document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+        document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const msg = document.getElementById('statusMsg');
+            const btn = document.getElementById('submitBtn');
 
-    const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+            // Visual feedback
+            msg.innerText = "Authenticating...";
+            msg.className = "text-gray-400 text-center text-sm";
+            btn.innerText = "Please wait...";
+            btn.disabled = true;
 
-    if (error) {
-        alert(error.message);
-    } else {
-        localStorage.setItem('sb-access-token', data.session.access_token);
-        window.location.href = '/dashboard';
-    }
-});
+            const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
 
+            if (error) {
+                msg.innerText = error.message;
+                msg.className = "text-red-500 text-center text-sm";
+                btn.innerText = "Sign In";
+                btn.disabled = false;
+            } else {
+                msg.innerText = "Success! Redirecting...";
+                msg.className = "text-emerald-500 text-center text-sm";
+                localStorage.setItem('sb-access-token', data.session.access_token);
+                
+                // Small delay so the user sees the success message
+                setTimeout(() => {
+                    window.location.href = '/dashboard';
+                }, 800);
+            }
+        });
     </script>
 </body>
 </html>
