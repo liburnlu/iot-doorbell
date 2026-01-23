@@ -48,13 +48,32 @@ def read_root():
 async def dashboard():
     return FileResponse('static/index.html')
 
-@app.get('/register')
+@app.get('/dashboard/create-admin')
 async def register():
-    return FileResponse('static/register.html')
+    return FileResponse('static/admin-create.html')
 
 @app.get('/login')
 async def login():
     return FileResponse('static/login.html')
+
+@app.post("/dashboard/create-admin")
+async def create_new_user(request: Request):
+    data = await request.json()
+    name = data.get("name")
+    email = data.get("email")
+    password = data.get("password")
+
+    try:
+        response = supabase.auth.admin.create_user({
+            "user_metadata": { "name": name },
+            "email": email,
+            "password": password,
+            "email_confirm": True  # Auto-confirms so they don't need to check email
+        })
+        return {"status": "success" , "user" : email}
+    except Exception as e:
+        print(f"Admin Error: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/images")
 def get_doorbell_images(page: int = 1, page_size: int = 12, user = Depends(get_current_user)):

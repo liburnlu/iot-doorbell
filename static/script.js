@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         document.getElementById('user-email').innerText = user.email;
-        document.getElementById('user-name').innerText = user.email.split('@')[0];
+        document.getElementById('user-name').innerText = user.user_metadata.name || "Admin";
 
         loadGallery(currentPage);
 
@@ -65,7 +65,6 @@ async function loadGallery(page) {
         grid.innerHTML = `<div class="col-span-full text-center py-20 text-red-500">Backend Connection Error.</div>`;
     }
 }
-
 function changePage(step) {
     currentPage += step;
     if (currentPage < 1) currentPage = 1;

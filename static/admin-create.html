@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Admin | Doorbell Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#1c1c1c] flex items-center justify-center h-screen">
+    <div class="bg-[#232323] p-8 rounded-lg border border-[#2e2e2e] w-full max-w-md shadow-2xl">
+        <div class="flex justify-center mb-6">
+            <div class="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center font-bold text-black text-2xl">D</div>
+        </div>
+        <h2 class="text-white text-2xl font-bold mb-2 text-center">Add New Admin</h2>
+        <p class="text-gray-500 text-sm text-center mb-8">This user will have full system access</p>
+        
+        <form id="adminCreateForm" class="space-y-4">
+             <div>
+                <label class="block text-xs text-gray-400 mb-1 ml-1">Name</label>
+                <input type="text" id="name" required class="w-full p-3 bg-[#171717] border border-[#2e2e2e] rounded text-white outline-none focus:border-emerald-500 transition">
+            </div>
+            <div>
+                <label class="block text-xs text-gray-400 mb-1 ml-1">Email Address</label>
+                <input type="email" id="email" required class="w-full p-3 bg-[#171717] border border-[#2e2e2e] rounded text-white outline-none focus:border-emerald-500 transition">
+            </div>
+            <div>
+                <label class="block text-xs text-gray-400 mb-1 ml-1">Password</label>
+                <input type="password" id="password" required class="w-full p-3 bg-[#171717] border border-[#2e2e2e] rounded text-white outline-none focus:border-emerald-500 transition">
+            </div>
+            <button type="submit" class="w-full bg-emerald-500 text-black font-bold py-3 rounded hover:bg-emerald-400 transition transform active:scale-[0.98]">
+                Create Account
+            </button>
+            <p id="responseMsg" class="text-center text-sm mt-2"></p>
+        </form>
+        
+        <div class="mt-6 text-center">
+            <a href="/dashboard" class="text-gray-400 hover:text-emerald-500 text-sm">← Back to Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('adminCreateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const msg = document.getElementById('responseMsg');
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            msg.innerText = "Processing...";
+            msg.className = "text-gray-400 text-center text-sm mt-2";
+
+            // We call our FastAPI endpoint, NOT Supabase directly
+            const response = await fetch('/dashboard/create-admin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({name , email, password })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                msg.innerText = "User created successfully!";
+                msg.className = "text-emerald-500 text-center text-sm mt-2";
+                e.target.reset();
+            } else {
+                msg.innerText = "Error: " + (result.detail || "Failed to create user");
+                msg.className = "text-red-500 text-center text-sm mt-2";
+            }
+        });
+    </script>
+</body>
+</html>
