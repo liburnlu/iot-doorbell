@@ -3,23 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doorbell Admin | Storage</title>
+    <title>Doorbell Admin | Live Stream</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         #sidebar { transition: transform 0.3s ease-in-out; }
-        /* Matching the glow from the stream page */
-        .sidebar-glow { box-shadow: 10px 0 20px rgba(16, 185, 129, 0.05); }
-        .image-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+        .stream-glow { box-shadow: 0 0 20px rgba(16, 185, 129, 0.1); }
     </style>
 </head>
 <body class="bg-[#1c1c1c] text-white antialiased">
     <div class="flex h-screen overflow-hidden relative">
 
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#171717] border-r border-[#2e2e2e] flex flex-col h-screen transform -translate-x-full md:translate-x-0 md:relative md:flex sidebar-glow">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#171717] border-r border-[#2e2e2e] flex flex-col h-screen transform -translate-x-full md:translate-x-0 md:relative md:flex">
             <div class="flex-1">
                 <div class="p-6 flex items-center justify-between border-b border-[#2e2e2e] mb-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center font-bold text-black shadow-[0_0_10px_rgba(16,185,129,0.5)]">D</div>
+                        <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center font-bold text-black">D</div>
                         <span class="font-bold text-xl tracking-tight text-white">Doorbell</span>
                     </div>
                     <button onclick="toggleSidebar()" class="md:hidden text-gray-400">
@@ -27,14 +25,14 @@
                     </button>
                 </div>
                 <nav class="px-4 space-y-1">
-                    <a href="/dashboard" class="flex items-center gap-3 px-3 py-2 bg-[#2e2e2e] rounded-md text-sm font-medium text-white mb-2">
-                        <span class="text-emerald-500">📁</span> Captures
+                    <a href="/dashboard" class="flex items-center gap-3 px-3 py-2 hover:bg-[#2e2e2e] rounded-md text-sm font-medium text-gray-400 transition">
+                        <span class="text-emerald-500/50">📁</span> Captures
                     </a>
-                    <a href="/dashboard/stream" class="flex items-center gap-3 px-3 py-2 hover:bg-[#2e2e2e] rounded-md text-sm font-medium text-gray-400 transition">
-                        <span class="text-emerald-500/50">🔴</span> Live Stream
+                    <a href="/dashboard/stream" class="flex items-center gap-3 px-3 py-2 bg-[#2e2e2e] rounded-md text-sm font-medium text-white">
+                        <span class="text-emerald-500">🔴</span> Live Stream
                     </a>
                     <a href="/dashboard/create-admin" class="flex items-center gap-3 px-3 py-2 hover:bg-[#2e2e2e] rounded-md text-sm font-medium text-gray-400 transition">
-                        <span class="text-emerald-500/50">➕</span> Create New Admin
+                        <span class="text-emerald-500">➕</span> Create New Admin
                     </a>
                 </nav>
             </div>
@@ -64,20 +62,28 @@
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
                     <div class="flex items-center gap-2">
-                        <span class="text-emerald-500 font-semibold text-sm">Captures Log</span>
+                        <span class="text-emerald-500 font-semibold text-sm">Live Feed</span>
                     </div>
                 </div>
-
-                <div class="flex items-center bg-[#262626] border border-[#3e3e3e] rounded-md overflow-hidden scale-90 sm:scale-100">
-                    <button onclick="changePage(-1)" class="px-3 py-1.5 md:px-4 md:py-2 hover:bg-[#333] text-gray-300 text-xs border-r border-[#3e3e3e]">Back</button>
-                    <span id="pageLabel" class="px-3 md:px-6 text-[10px] md:text-xs font-mono text-white min-w-[60px] md:min-w-[100px] text-center">P. 1</span>
-                    <button onclick="changePage(1)" class="px-3 py-1.5 md:px-4 md:py-2 hover:bg-[#333] text-gray-300 text-xs">Next</button>
+                
+                <div class="flex items-center gap-3">
+                    <span class="flex h-2 w-2 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span class="text-[10px] font-bold text-emerald-500 tracking-widest uppercase">Live</span>
                 </div>
             </header>
 
-            <div class="p-4 md:p-8 overflow-y-auto">
-                <div id="image-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 md:gap-4">
-                    </div>
+            <div class="p-4 md:p-8 flex-1 flex flex-col items-center justify-center">
+                <div class="w-full max-w-5xl bg-black border border-[#2e2e2e] rounded-3xl overflow-hidden stream-glow aspect-video relative">
+                    <iframe 
+                        src="http://72.146.176.131:8889/cam1" 
+                        class="w-full h-full border-none" 
+                        allow="autoplay; fullscreen"
+                        scrolling="no">
+                    </iframe>
+                </div>
             </div>
         </main>
     </div>

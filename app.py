@@ -48,6 +48,10 @@ def read_root():
 async def dashboard():
     return FileResponse('static/index.html')
 
+@app.get("/dashboard/stream")
+async def dashboard():
+    return FileResponse('static/stream.html')
+
 @app.get('/dashboard/create-admin')
 async def register():
     return FileResponse('static/admin-create.html')
